@@ -1,7 +1,7 @@
 <template>
     <div id="controlPanel">
         <panel :products="products"></panel>
-        <public :products="products"></public>
+        <public :products="products" @remove="remove"></public>
     </div>
 </template>
 
@@ -19,6 +19,11 @@
                 products: [],
             }
         },
+        methods: {
+            remove(prod) {
+                this.products = this.products.filter(e => e.id != prod.id);
+            }
+        }
     }
 </script>
 
@@ -59,7 +64,16 @@
         display: block;
     }
 
+    select {
+        outline: none;
+        cursor: pointer;
+    }
+
     #controlPanel {
         display: flex;
+    }
+
+    .strong {
+        font-weight: 400;
     }
 </style>

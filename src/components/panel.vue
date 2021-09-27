@@ -12,19 +12,25 @@
             <label class="input" key="price">
                 <i class="fas fa-pen"></i>
                 <input type="text" v-model.number.lazy="product.price" placeholder="Цена" required>
+                <select id="rate" @change="product.rate = $event.target.value">
+                    <option v-for="rate in rates" :key="rate" :value="rate[1]">{{rate[0]}}</option>
+                </select>
             </label>
             <label for="file" key="image">
                 <i class="far fa-image"></i>
                 <span>Выбрать файл</span>
             </label>
             <input type="file" id="file" @click="click">
-            <button @click="addProduct">Добавить</button>
+            <button @click="_addProduct">Добавить</button>
         </form>
     </aside>
 </template>
 
 <script>
-    import Rates from "@/components/rate.vue";
+    import _getRates from "@/data/rate.js";
+    const _rates = _getRates();
+    let newId = 0;
+
     export default {
         props: {
             products: {
@@ -34,21 +40,24 @@
         },
         data() {
             return {
-                product: this.emptyObj(),
+                product: this._setEmptyObj(),
+                rates: _rates,
             }
         },
         methods: {
-            emptyObj() {
+            _setEmptyObj() {
                 return {
+                    id: newId += 1,
                     name: '',
                     descr: '',
                     price: '',
+                    rate: Object.values(_rates)[0][1],
                 }
             },
-            addProduct() {
-                if (Object.values(this.product).some(value => value == '')) return;
+            _addProduct() {
+                // if (Object.values(this.product).some(value => value == '')) return;
                 this.products.push(this.product),
-                    this.product = this.emptyObj();
+                    this.product = this._setEmptyObj();
             }
         }
     }
@@ -76,27 +85,27 @@
         background: #000;
     }
 
-    #panel form .input>* {
+    form .input>* {
         letter-spacing: 1px;
         color: #858585;
     }
 
-    #panel form .input {
+    form .input {
         background: #fff;
     }
 
-    #panel form i {
+    form i {
         padding: 5px 8px 5px 20px;
         border-right: 1px solid;
         pointer-events: none;
     }
 
-    #panel form input,
-    #panel form span {
+    form input,
+    form span {
         padding: 10px;
     }
 
-    #panel form label {
+    form label {
         display: flex;
         align-items: center;
         position: relative;
@@ -107,18 +116,18 @@
         cursor: pointer;
     }
 
-    #panel form button {
+    form button {
         color: #fff;
         background: #7FE366;
         padding: 14px;
     }
 
-    #panel input[type="text"] {
+    input[type="text"] {
         font-weight: 400;
         color: #333;
     }
 
-    #panel input[type="file"] {
+    input[type="file"] {
         display: none;
     }
 </style>
