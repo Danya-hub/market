@@ -4,10 +4,13 @@
       <button class="remove" @click="$emit('remove', iteration)">
         <i class="far fa-trash-alt"></i>
       </button>
-      <div class="content">
+      <div class="content"> 
         <h3 class="name">{{iteration.name}}</h3>
         <img src="#" alt="imgProd" class="image">
-        <span class="price">{{iteration.price + iteration.rate}}</span>
+        <div class="total">
+          <span class="price" :class="{ oldPrice : iteration?.discount }">{{ iteration.price }}{{ iteration.rate }}</span>
+          <span v-if="iteration?.discount" class="newPrice"> {{ iteration.totalPrice }}{{ iteration.rate }}</span>
+        </div>
       </div>
     </div>
   </main>
@@ -41,25 +44,25 @@
     margin: 20px;
   }
 
-  .product .content {
+  .content {
     overflow-wrap: break-word;
   }
 
-  .product .content>* {
+  .content>* {
     display: block;
     margin-top: 10px;
   }
 
-  .product .content>*:first-child {
+  .content>*:first-child {
     margin: 0;
   }
 
-  .product .name {
+  .name {
     font-size: 16px;
     font-weight: 600;
   }
 
-  .product .image {
+  .image {
     background: rgb(235, 235, 235);
     width: 100%;
     height: 160px;
@@ -72,11 +75,20 @@
     padding: 0;
     right: 0;
     top: 0;
-    transition: .2s color;
+    transition: var(--transDuration) color;
     color: rgb(148, 148, 148);
   }
 
   .remove:hover {
-    color: rgb(236, 47, 47);
+    color: var(--red);
+  }
+
+  .oldPrice {
+    text-decoration: line-through;
+  }
+
+  .newPrice {
+    color: var(--red);
+    font-weight: 600;
   }
 </style>

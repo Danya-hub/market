@@ -29,6 +29,8 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap');
+    @import url('./style/color.css');
+    @import url('./style/compute.css');
 
     * {
         margin: 0;
@@ -64,9 +66,24 @@
         display: block;
     }
 
+    textarea {
+        display: block;
+        width: 100%;
+        outline: none;
+        resize: none;
+    }
+
+    textarea::-webkit-scrollbar {
+        display: none;
+    }
+
     select {
         outline: none;
         cursor: pointer;
+    }
+
+    span {
+        display: block;
     }
 
     #controlPanel {
