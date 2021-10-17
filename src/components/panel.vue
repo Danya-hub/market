@@ -1,63 +1,45 @@
 <template>
     <aside>
-        <form action="">
-            <label class="input">
-                <i class="fas fa-pen"></i>
-                <input type="text" class="panel" v-model.lazy="product.name" placeholder="Название" required>
-            </label>
-            <label class="textarea">
-                <i class="fas fa-pen"></i>
-                <textarea class="panel" v-model.lazy="product.descr" placeholder="Описание" required></textarea>
-            </label>
-            <label class="input">
-                <i class="fas fa-pen"></i>
-                <input type="text" class="panel" v-model.number.lazy="product.price" placeholder="Цена" required>
+        <Form>
+            <Input placeholder="Название" icon="pen" v-model:value="product.name"></Input>
+            <Textarea placeholder="Описание" icon="pen" v-model:value.trim="product.descr"></Textarea>
+            <Input placeholder="Цена" icon="pen" v-model:value.number="product.price">
+            <template v-slot:nav>
                 <select id="rate" @change="product.rate = $event.target.value">
                     <option v-for="rate in rates" :key="rate" :value="rate[1]">{{rate[0]}}</option>
                 </select>
-            </label>
+            </template>
+            </Input>
             <div class="discount">
-                <label ref="discount" class="input disabled">
-                    <i class="fas fa-pen"></i>
-                    <input type="text" class="panel" @input="_setDiscount" v-model.number.lazy="product.discount"
-                        placeholder="Скидка">
-                </label>
+                <Input class="disabled" @input="_setDiscount" v-model:value.number="product.discount" placeholder="Скидка"
+                    icon="pen" @parent="_getParent"></Input>
                 <SwitchBtn @switch="_setActive"></SwitchBtn>
             </div>
-            <label class="file">
-                <i class="far fa-image"></i>
-                <span class="panel">Выбрать файл</span>
-                <input type="file" id="file" @click="click">
-            </label>
-            <button @click.prevent="_addProduct" class="add">Добавить</button>
-        </form>
+            <File icon="image"></File>
+            <Button @click.prevent="_addProduct">Добавить</Button>
+        </Form>
     </aside>
 </template>
 
 <script>
-    import SwitchBtn from "@/UI/switchButton.vue";
-    import Input from "@/UI/input.vue";
     import _getRates from "@/data/rate.js";
 
-    const _rates = _getRates();
-    let maxLengthSign = 2;
+    const rates = _getRates();
+    const maxLengthSign = 2;
     let newId = 0;
+    let label = null;
 
     export default {
-        components: {
-            SwitchBtn,
-            Input,
-        },
         props: {
             products: {
                 type: Array,
-                required: true,
+                required: true
             }
         },
         data() {
             return {
                 product: this._setEmptyObj(),
-                rates: _rates,
+                rates,
             }
         },
         methods: {
@@ -67,24 +49,25 @@
                     name: '',
                     descr: '',
                     price: '',
-                    rate: Object.values(_rates)[0][1],
+                    rate: Object.values(rates)[0][1],
                 }
             },
             _addProduct() {
-                if (Object.values(this.product).some(value => value == '')) return;
+                // if (Object.values(this.product).some(value => value == '')) return;
                 this.products.push(this.product),
                     this.product = this._setEmptyObj();
             },
-            _setActive(bool) {
-                let input = this.$refs.discount;
-                bool ? (input.classList.remove('disabled'), this.product.discount = '', this.product.totalPrice = 0) : 
-                    (input.classList.add('disabled'), delete this.product.discount, delete this.product.totalPrice);
+            _setActive(value) {
+                value ? (label.classList.remove('disabled'), this.product.discount = '', this.product.totalPrice = 0) :
+                    (label.classList.add('disabled'), delete this.product.discount, delete this.product.totalPrice);
             },
             _setDiscount(event) {
                 let price = Number(this.product.price),
                     discount = Number(event.target.value);
-                    
                 this.product.totalPrice = Number((price - (price / 100 * discount)).toFixed(maxLengthSign));
+            },
+            _getParent(event) {
+                label = event;
             }
         }
     }
@@ -108,83 +91,9 @@
         background: var(--black);
     }
 
-    .input,
-    .textarea {
-        background: var(--white);
-        color: rgb(100, 100, 100);
-    }
-
-    *::placeholder {
-        letter-spacing: 1px;
-        font-weight: 400;
-        color: #777;
-    }
-
-    form>* {
-        margin-bottom: 14px;
-    }
-
-    i {
-        pointer-events: none;
-    }
-
-    label,
-    .input {
-        display: flex;
-        padding-left: 16px;
-    }
-
-    label {
-        transition: var(--transDuration) background, var(--transDuration) opacity;
-    }
-
-    span {
-        align-self: center;
-        width: 100%;
-    }
-
-    input[type="text"],
-    textarea,
-    span {
-        padding: 0 10px;
-    }
-
     .disabled {
         opacity: 0.7;
         pointer-events: none;
-    }
-
-    input[type="file"] {
-        display: none;
-    }
-
-    .input i {
-        padding: 14px 0;
-    }
-
-    .input {
-        border-radius: var(--borderRadius);
-    }
-
-    .textarea {
-        padding-top: 10px;
-        border-radius: 20px;
-    }
-
-    .file {
-        border: 1px solid;
-        color: var(--white);
-        border-radius: var(--borderRadius);
-        cursor: pointer;
-    }
-
-    .file i {
-        align-self: center;
-        padding: 14px 0;
-    }
-
-    textarea {
-        height: 100px;
     }
 
     .discount {
@@ -193,9 +102,7 @@
         justify-content: space-between;
     }
 
-    .add {
-        color: var(--white);
+    button {
         background: var(--lightgreen);
-        padding: 14px;
     }
 </style>

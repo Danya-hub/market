@@ -5,26 +5,28 @@
 </template>
 
 <script>
-    let bool = false;
-
     export default {
+        name: 'SwitchBtn',
+        mounted() {
+            this.switchBtn = this.$refs.switch,
+                this.point = this.$refs.slider,
+                this.bool = false;
+        },
         methods: {
             _setSwitch() {
-                !bool ? bool = true : bool = false;
-                this.$emit('switch', bool);
+                this.$emit('switch', this.bool = !this.bool);
 
                 this._setAnimation();
             },
             _setAnimation() {
-                let switchBtn = this.$refs.switch,
-                    point = this.$refs.slider;
-
-                bool ?
-                    (point.style.left = switchBtn.offsetWidth - point.offsetWidth - parseInt(getComputedStyle(
-                        point, null).marginLeft) - parseInt(getComputedStyle(point, null).marginRight) + 'px',
-                        switchBtn.style.background = 'var(--lightgreen)') :
-                    (point.style.left = '0px', 
-                    switchBtn.style.background = 'var(--grey)');
+                this.bool ?
+                    (this.point.style.left = this.switchBtn.offsetWidth - this.point.offsetWidth - parseInt(
+                            getComputedStyle(
+                                this.point, null).marginLeft) - parseInt(getComputedStyle(this.point, null)
+                        .marginRight) + 'px',
+                        this.switchBtn.style.background = 'var(--lightgreen)') :
+                    (this.point.style.left = '0px',
+                        this.switchBtn.style.background = 'var(--grey)');
             }
         }
     }

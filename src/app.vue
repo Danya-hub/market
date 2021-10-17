@@ -1,7 +1,7 @@
 <template>
     <div id="controlPanel">
-        <panel :products="products"></panel>
-        <public :products="products" @remove="remove"></public>
+        <Panel :products="products"></Panel>
+        <Public :products="products" @remove="remove"></Public>
     </div>
 </template>
 
@@ -21,7 +21,8 @@
         },
         methods: {
             remove(prod) {
-                this.products = this.products.filter(e => e.id != prod.id);
+                console.log(prod);
+                // this.products = this.products.filter(e => e.id != prod.id);
             }
         }
     }
@@ -29,8 +30,6 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap');
-    @import url('./style/color.css');
-    @import url('./style/compute.css');
 
     * {
         margin: 0;
@@ -62,10 +61,6 @@
         font-weight: 400;
     }
 
-    label {
-        display: block;
-    }
-
     textarea {
         display: block;
         width: 100%;
@@ -92,5 +87,9 @@
 
     .strong {
         font-weight: 400;
+    }
+
+    i {
+        pointer-events: none;
     }
 </style>
