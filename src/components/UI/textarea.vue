@@ -39,6 +39,6 @@
     }
 
     ::placeholder {
-        color: var(--blackgrey);
+        color: var(--darkgrey);
     }
 </style>

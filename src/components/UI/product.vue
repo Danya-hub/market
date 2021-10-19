@@ -5,11 +5,14 @@
         </button>
         <div class="content">
             <h3 class="name">{{iteration.name}}</h3>
-            <img src="#" alt="imgProd" class="image">
+            <div class="image">
+                <span v-if="iteration?.percent" class="percent" ref="discount">{{iteration.percent}}%</span>
+                <img :src="iteration.image.src" alt="imgProd">
+            </div>
             <div class="total">
                 <span class="price"
-                    :class="{ oldPrice : iteration?.discount }">{{ iteration.price }}{{ iteration.rate }}</span>
-                <span v-if="iteration?.discount" class="newPrice"> {{ iteration.totalPrice }}{{ iteration.rate }}</span>
+                    :class="{ oldPrice : iteration?.percent }">{{ iteration.price }}{{ iteration.rate }}</span>
+                <span v-if="iteration?.percent" class="newPrice"> {{ iteration.totalPrice }}{{ iteration.rate }}</span>
             </div>
         </div>
     </div>
@@ -23,6 +26,11 @@
                 type: Array,
                 required: true,
             },
+        },
+        methods: {
+            _setImage(event) {
+                console.log(event);
+            }
         }
     }
 </script>
@@ -55,9 +63,24 @@
     }
 
     .image {
+        position: relative;
         background: rgb(235, 235, 235);
-        width: 100%;
         height: 160px;
+    }
+
+    .percent {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: var(--red);
+        border-radius: var(--borderRadius);
+        color: var(--white);
+        right: 10px;
+        top: 10px;
+        width: var(--sizeDiscount);
+        height: var(--sizeDiscount);
+        font-weight: 600;
     }
 
     .remove {

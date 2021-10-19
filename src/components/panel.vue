@@ -10,13 +10,13 @@
                 </select>
             </template>
             </Input>
-            <div class="discount">
-                <Input class="disabled" @input="_setDiscount" v-model:value.number="product.discount" placeholder="Скидка"
-                    icon="pen" @parent="_getParent"></Input>
+            <div class="percent">
+                <Input class="disabled" @input="_setDiscount" v-model:value.number="product.percent"
+                    placeholder="Скидка" icon="pen" @parent="_getParent"></Input>
                 <SwitchBtn @switch="_setActive"></SwitchBtn>
             </div>
-            <File icon="image"></File>
-            <Button @click.prevent="_addProduct">Добавить</Button>
+            <File icon="image" @image="(event) => product.image = event"></File>
+            <Button @click.prevent="$emit('add', product), product = _setEmptyObj()">Добавить</Button>
         </Form>
     </aside>
 </template>
@@ -49,22 +49,20 @@
                     name: '',
                     descr: '',
                     price: '',
+                    image: null,
                     rate: Object.values(rates)[0][1],
                 }
             },
-            _addProduct() {
-                // if (Object.values(this.product).some(value => value == '')) return;
-                this.products.push(this.product),
-                    this.product = this._setEmptyObj();
-            },
             _setActive(value) {
-                value ? (label.classList.remove('disabled'), this.product.discount = '', this.product.totalPrice = 0) :
-                    (label.classList.add('disabled'), delete this.product.discount, delete this.product.totalPrice);
+                value ? (label.classList.remove('disabled'), this.product.percent = '', this.product.totalPrice = 0) :
+                    (label.classList.add('disabled'), delete this.product.percent, delete this.product.totalPrice);
             },
             _setDiscount(event) {
                 let price = Number(this.product.price),
-                    discount = Number(event.target.value);
-                this.product.totalPrice = Number((price - (price / 100 * discount)).toFixed(maxLengthSign));
+                    percent = Number(event.target.value);
+                let rez = Number((price - (price / 100 * percent)).toFixed(maxLengthSign));
+                
+                this.product.totalPrice = rez > 0 ? rez : 0;
             },
             _getParent(event) {
                 label = event;
@@ -96,7 +94,7 @@
         pointer-events: none;
     }
 
-    .discount {
+    .percent {
         display: flex;
         align-items: center;
         justify-content: space-between;

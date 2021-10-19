@@ -1,7 +1,7 @@
 <template>
     <div id="controlPanel">
-        <Panel :products="products"></Panel>
-        <Public :products="products" @remove="remove"></Public>
+        <Panel :products="products" @add="_addProduct"></Panel>
+        <Public :products="products" @remove="_remProduct"></Public>
     </div>
 </template>
 
@@ -20,10 +20,13 @@
             }
         },
         methods: {
-            remove(prod) {
-                console.log(prod);
-                // this.products = this.products.filter(e => e.id != prod.id);
-            }
+            _remProduct(prod) {
+                this.products = this.products.filter(e => e.id != prod.id);
+            },
+            _addProduct(product) {
+                if (Object.values(product).some(value => String(value) == '')) return;
+                this.products.push(product);
+            },
         }
     }
 </script>
@@ -48,6 +51,14 @@
         letter-spacing: 2px;
         padding: 10px 20px;
         cursor: pointer;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: fit-content;
+        object-fit: contain;
+        pointer-events: none;
     }
 
     input {
@@ -79,6 +90,7 @@
 
     span {
         display: block;
+        font-weight: 400;
     }
 
     #controlPanel {

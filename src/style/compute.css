@@ -1,7 +1,10 @@
 :root {
-    --sizePoint: 20px;
-    --switchHeight: 24px;
     --borderRadius: 100vw;
+    
+    --sizePoint: 20px;
+    --sizeDiscount: 40px;
+
+    --switchHeight: 24px;
     --heightTextarea: 100px;
 
     --transDuration: 0.2s;
